@@ -9,6 +9,6 @@ namespace NugetDownloader.Services
     public interface INugetService
     {
         Task<IList<PackageInfo>> Search(string name);
-        PackageInfo Download(string name, string version = "");
+        Task Download(PackageInfo package);
     }
 }

@@ -1,9 +1,15 @@
-﻿using NuGet.Common;
+﻿using Microsoft.Extensions.Configuration;
+using NuGet.Common;
+using NuGet.Packaging;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
+using NuGet.Versioning;
+using NugetDownloader.Events;
 using NugetDownloader.Models;
+using Prism.Events;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +18,15 @@ namespace NugetDownloader.Services
 {
     public class NugetService : INugetService
     {
+        private readonly IEventAggregator _eventAggregator;
+        private readonly IConfiguration _configuration;
+
+        public NugetService(IEventAggregator eventAggregator, IConfiguration configuration)
+        {
+            _eventAggregator = eventAggregator;
+            _configuration = configuration;
+        }
+
         public async Task<IList<PackageInfo>> Search(string name)
         {
             IList<PackageInfo> packages = new List<PackageInfo>();
@@ -34,7 +49,37 @@ namespace NugetDownloader.Services
             return packages;
         }
 
-        public PackageInfo Download(string name, string version = "") => throw new NotImplementedException();
+        public async Task Download(PackageInfo package)
+        {
+            var logger = NullLogger.Instance;
+            var cancellationToken = CancellationToken.None;
+
+            var cacheContext = new SourceCacheContext();
+            var repository = Repository.Factory.GetCoreV3("https://api.nuget.org/v3/index.json");
+            var resource = await repository.GetResourceAsync<FindPackageByIdResource>();
+
+            var version = new NuGetVersion(package.Version);
+
+            using(MemoryStream packageStream = new MemoryStream())
+            {
+                await resource.CopyNupkgToStreamAsync(
+                    package.Name,
+                    version,
+                    packageStream,
+                    cacheContext,
+                    logger,
+                    cancellationToken);
+
+                using (var packageReader = new PackageArchiveReader(packageStream))
+                {
+                    var nuspecReader = await packageReader.GetNuspecReaderAsync(cancellationToken);
+
+                    _eventAggregator.GetEvent<PackageDownloadedEvent>().Publish(nuspecReader.GetTags());
+                    _eventAggregator.GetEvent<PackageDownloadedEvent>().Publish(nuspecReader.GetDescription());
+                }
+            }
+
+        }
         
     }
 }

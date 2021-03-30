@@ -4,12 +4,27 @@
 		xmlns:prism="http://prismlibrary.com/"
 		xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
 		xmlns:controls="clr-namespace:NugetDownloader.UserControls"
+		xmlns:converters="clr-namespace:NugetDownloader.Converters"
 		prism:ViewModelLocator.AutoWireViewModel="True"
 		FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
 		Background="{DynamicResource MaterialDesignPaper}"
 		Title="{Binding Title}"
 		Height="600"
-		Width="800">
+		Width="800"
+		WindowStartupLocation="CenterScreen">
+
+	<Window.Resources>
+		<converters:SelectedPackageToVisibilityConverter x:Key="SelectedPackageToVisibilityConverter" />
+
+		<Style TargetType="{x:Type TextBlock}"
+			   x:Key="HorizontalExpanderContentTextBlock">
+			<Setter Property="Opacity"
+					Value=".68" />
+			<Setter Property="TextWrapping"
+					Value="Wrap" />
+		</Style>
+	</Window.Resources>
+
 	<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
@@ -18,24 +33,55 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="200" />
 		</Grid.RowDefinitions>
 
 		<TextBox Grid.Row="0"
-				 Grid.Column="0" />
+				 Grid.Column="0"
+				 Margin="10"
+				 Text="{Binding SearchTerm}"/>
 		<Button Grid.Row="0"
 				Grid.Column="1"
 				Content="Search"
-				Command="{Binding SearchCommand}"/>
+				Margin="10"
+				Command="{Binding SearchCommand}" />
 
 		<ListBox Grid.Row="1"
 				 Grid.Column="0"
 				 Grid.ColumnSpan="2"
-				 ItemsSource="{Binding Packages}">
+				 Margin="10"
+				 ItemsSource="{Binding Packages}"
+				 SelectedItem="{Binding SelectedPackage}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<controls:PackageItemTemplate />
 				</DataTemplate>
 			</ListBox.ItemTemplate>
-				 </ListBox>
+		</ListBox>
+
+		<Button Grid.Row="2"
+				Grid.Column="2"
+				Content="Download"
+				Margin="10"
+				Command="{Binding DownloadCommand}"
+				Visibility="{Binding SelectedPackage, Converter={StaticResource SelectedPackageToVisibilityConverter}}"/>
+
+		<Expander Grid.Row="3"
+				  Grid.Column="0"
+				  Grid.ColumnSpan="2"
+				  Margin="10"
+				  HorizontalAlignment="Stretch"
+				  VerticalAlignment="Bottom"
+				  Header="Output"
+				  Foreground="{DynamicResource MaterialDesignDarkForeground}">
+			<StackPanel Orientation="Vertical"
+						TextBlock.Foreground="{DynamicResource MaterialDesignDarkForeground}"
+						Margin="24,8,24,16">
+				<TextBlock Text="{Binding OutputText}" />
+				<TextBlock Style="{StaticResource HorizontalExpanderContentTextBlock}" />
+			</StackPanel>
+		</Expander>
+
 	</Grid>
 </Window>

@@ -6,11 +6,20 @@
 			 prism:ViewModelLocator.AutoWireViewModel="True"
 			 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
 			 Background="{DynamicResource MaterialDesignPaper}">
+
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
     <Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto" />
-			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
 		<Grid.RowDefinitions>
@@ -18,18 +27,26 @@
 			<RowDefinition />
 		</Grid.RowDefinitions>
 
-		<CheckBox Grid.Column="0"
-				  Grid.Row="0"
-				  Grid.RowSpan="2" />
-		<TextBlock Grid.Column="1"
+		<TextBlock Grid.Column="0"
 				   Grid.Row="0"
+				   Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+				   Foreground="{DynamicResource PrimaryHueLightBrush}"
 				   Text="{Binding Name}" />
-		<TextBlock Grid.Column="2"
-				   Grid.Row="0"
-				   Text="{Binding Version}" />
+		<!-- Change color-->
 		<TextBlock Grid.Column="1"
+				   Grid.Row="0"
+				   Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+				   Foreground="{DynamicResource PrimaryHueMidBrush}"
+				   VerticalAlignment="Bottom"
+				   Margin="10 0 0 0"
+				   Text="{Binding Version}" />
+		<TextBlock Grid.Column="0"
 				   Grid.ColumnSpan="2"
 				   Grid.Row="1"
+				   Style="{StaticResource MaterialDesignBody1TextBlock}"
+				   Foreground="{DynamicResource MaterialDesignDarkForeground }"
+				   Margin="0 3 0 0"
 				   Text="{Binding Description}" />
+
 	</Grid>
 </UserControl>

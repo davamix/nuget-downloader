@@ -7,22 +7,24 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<materialDesign:BundledTheme BaseTheme="Light"
-											 PrimaryColor="LightBlue"
-											 SecondaryColor="DeepOrange" />
+				<materialDesign:BundledTheme BaseTheme="Dark"
+											 PrimaryColor="Blue"
+											 SecondaryColor="Red" />
 				<ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
-			<Style TargetType="{x:Type Grid}">
+			<!--<Style TargetType="{x:Type Grid}">
 				<Setter Property="Background"
 						Value="#F8F9FA" />
-			</Style>
+			</Style>-->
 
 			<Style x:Key="textBlockStyle"
 				   TargetType="{x:Type TextBlock}"
-				   BasedOn="{StaticResource MaterialDesignBody2TextBlock}">
+				   BasedOn="{StaticResource MaterialDesignHeadline5TextBlock}">
+				<!--<Setter Property="Foreground"
+						Value="#495057" />-->
 				<Setter Property="Foreground"
-						Value="#495057" />
+						Value="{DynamicResource PrimaryHueLightBrush}" />
 				<Setter Property="Margin"
 						Value="10 0 0 0" />
 			</Style>
@@ -36,8 +38,10 @@
 
 			<Style TargetType="{x:Type TextBox}"
 				   BasedOn="{StaticResource MaterialDesignTextBox}">
+				<!--<Setter Property="Foreground"
+						Value="#212529" />-->
 				<Setter Property="Foreground"
-						Value="#212529" />
+						Value="{DynamicResource PrimaryHueLightBrush}" />
 				<Setter Property="FontSize"
 						Value="16" />
 				<Setter Property="Margin"
@@ -50,18 +54,16 @@
 				   BasedOn="{StaticResource MaterialDesignGroupBox}">
 				<Setter Property="materialDesign:ColorZoneAssist.Mode"
 						Value="Custom" />
-				<Setter Property="materialDesign:ColorZoneAssist.Background"
-						Value="#DEE2E6" />
-				<Setter Property="materialDesign:ColorZoneAssist.Foreground"
-						Value="#495057" />
+				<!--<Setter Property="materialDesign:ColorZoneAssist.Background"
+						Value="#DEE2E6" />-->
+				<!--<Setter Property="materialDesign:ColorZoneAssist.Foreground"
+						Value="#495057" />-->
 			</Style>
 
 			<Style TargetType="{x:Type Button}"
 				   BasedOn="{StaticResource MaterialDesignRaisedDarkButton}">
 				<Setter Property="Margin"
 						Value="5 10 5 0" />
-				<Setter Property="Foreground"
-						Value="#E9ECEF" />
 			</Style>
 		</ResourceDictionary>
 	</Application.Resources>
