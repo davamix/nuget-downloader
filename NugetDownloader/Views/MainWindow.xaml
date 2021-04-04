@@ -40,12 +40,14 @@
 		<TextBox Grid.Row="0"
 				 Grid.Column="0"
 				 Margin="10"
-				 Text="{Binding SearchTerm}"/>
+				 Text="{Binding SearchTerm}" />
 		<Button Grid.Row="0"
 				Grid.Column="1"
-				Content="Search"
 				Margin="10"
-				Command="{Binding SearchCommand}" />
+				Command="{Binding SearchCommand}">
+			<TextBlock Style="{StaticResource MaterialDesignButtonTextBlock}"
+					   Text="SEARCH" />
+		</Button>
 
 		<ListBox Grid.Row="1"
 				 Grid.Column="0"
@@ -55,17 +57,19 @@
 				 SelectedItem="{Binding SelectedPackage}">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<controls:PackageItemTemplate />
+					<controls:PackageItemTemplate HorizontalAlignment="Stretch" />
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
 
 		<Button Grid.Row="2"
 				Grid.Column="2"
-				Content="Download"
 				Margin="10"
 				Command="{Binding DownloadCommand}"
-				Visibility="{Binding SelectedPackage, Converter={StaticResource SelectedPackageToVisibilityConverter}}"/>
+				Visibility="{Binding SelectedPackage, Converter={StaticResource SelectedPackageToVisibilityConverter}}">
+			<TextBlock Style="{StaticResource MaterialDesignButtonTextBlock}"
+					   Text="DOWNLOAD" />
+		</Button>
 
 		<Expander Grid.Row="3"
 				  Grid.Column="0"
@@ -78,7 +82,10 @@
 			<StackPanel Orientation="Vertical"
 						TextBlock.Foreground="{DynamicResource MaterialDesignDarkForeground}"
 						Margin="24,8,24,16">
-				<TextBlock Text="{Binding OutputText}" />
+				<TextBox Text="{Binding OutputText}"
+						 AcceptsReturn="True"
+						 TextWrapping="Wrap"
+						 IsReadOnly="True" />
 				<TextBlock Style="{StaticResource HorizontalExpanderContentTextBlock}" />
 			</StackPanel>
 		</Expander>
