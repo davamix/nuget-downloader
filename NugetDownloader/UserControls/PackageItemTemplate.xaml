@@ -15,11 +15,10 @@
 		</ResourceDictionary>
 	</UserControl.Resources>
 
-    <Grid>
+	<Grid Background="{DynamicResource MaterialDesignFlatButtonClick}">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 
 		<Grid.RowDefinitions>
