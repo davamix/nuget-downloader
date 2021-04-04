@@ -9,7 +9,7 @@ namespace NugetDownloader.Services
     public interface INugetService
     {
         Task<IList<PackageInfo>> Search(string name);
-        Task<List<PackageInfoDependency>> Download(PackageInfo package);
+        Task<List<PackageGroupInfo>> Download(PackageInfo package);
         Task<IList<PackageInfoDependency>> SearchDependencies(PackageInfo package);
     }
 }

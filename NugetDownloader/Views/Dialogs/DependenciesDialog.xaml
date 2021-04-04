@@ -3,10 +3,43 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:prism="http://prismlibrary.com/"
 			 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+			 xmlns:models="clr-namespace:NugetDownloader.Models"
 			 FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
 			 Background="{DynamicResource MaterialDesignPaper}"
 			 Height="480"
 			 Width="640">
+
+	<UserControl.Resources>
+		<HierarchicalDataTemplate DataType="{x:Type models:PackageGroupInfo}"
+								  ItemsSource="{Binding Packages}">
+			<Border>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+							   Foreground="{DynamicResource PrimaryHueLightBrush}"
+							   Text="{Binding TargetFrameworkName}" />
+					<TextBlock Margin="5 0 0 0"
+							   Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+							   Foreground="{DynamicResource PrimaryHueMidBrush}"
+							   Text="{Binding Version}" />
+				</StackPanel>
+			</Border>
+
+		</HierarchicalDataTemplate>
+
+		<DataTemplate DataType="{x:Type models:PackageInfoDependency}">
+			<Border>
+				<StackPanel Orientation="Horizontal">
+					<TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
+							   Foreground="{DynamicResource PrimaryHueLightBrush}"
+							   Text="{Binding Id}" />
+					<TextBlock Margin="5 0 0 0"
+							   Style="{StaticResource MaterialDesignBody2TextBlock}"
+							   Foreground="{DynamicResource PrimaryHueMidBrush}"
+							   Text="{Binding MinVersion}" />
+				</StackPanel>
+			</Border>
+		</DataTemplate>
+	</UserControl.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -21,8 +54,8 @@
 		</Grid.ColumnDefinitions>
 
 		<TextBlock Grid.Row="0"
-		Grid.Column="0"
-		Grid.ColumnSpan="2"
+				   Grid.Column="0"
+				   Grid.ColumnSpan="2"
 				   Margin="10"
 				   Text="{Binding PackageName}" />
 
@@ -34,43 +67,29 @@
 				   Foreground="{DynamicResource SecondaryHueLightBrush}"
 				   Text="Do you want download the dependencies?" />
 
-		<ListBox Grid.Row="2"
-				 Grid.Column="0"
-				 Grid.ColumnSpan="2"
-				 ItemsSource="{Binding Dependencies}">
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<Border Margin="3">
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
-									   Foreground="{DynamicResource PrimaryHueLightBrush}"
-									   Text="{Binding Id}" />
-							<TextBlock Margin="5 0 0 0"
-									   Style="{StaticResource MaterialDesignBody1TextBlock}"
-									   Foreground="{DynamicResource PrimaryHueMidBrush}"
-									   Text="{Binding MinVersion}" />
-						</StackPanel>
-					</Border>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
 
-		
-			<Button Grid.Row="3"
-			Grid.Column="0"
-			Margin="10"
-			Command="{Binding OkCommand}">
-				<TextBlock Style="{StaticResource MaterialDesignButtonTextBlock}"
-						   Text="OK" />
-			</Button>
+		<TreeView Grid.Row="2"
+				  Grid.Column="0"
+				  Grid.ColumnSpan="2"
+				  ItemsSource="{Binding Dependencies}">
+		</TreeView>
+
+
+		<Button Grid.Row="3"
+				Grid.Column="0"
+				Margin="10"
+				Command="{Binding OkCommand}">
+			<TextBlock Style="{StaticResource MaterialDesignButtonTextBlock}"
+					   Text="OK" />
+		</Button>
 		<Button Grid.Row="3"
 				Grid.Column="1"
 				Margin="10"
 				Command="{Binding CancelCommand}">
-				<TextBlock Style="{StaticResource MaterialDesignButtonTextBlock}"
-						   Text="CANCEL" />
-			</Button>
-	
+			<TextBlock Style="{StaticResource MaterialDesignButtonTextBlock}"
+					   Text="CANCEL" />
+		</Button>
+
 
 	</Grid>
 </UserControl>

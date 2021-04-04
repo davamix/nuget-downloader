@@ -18,24 +18,22 @@ namespace NugetDownloader.ViewModels.Dialogs
             set => SetProperty(ref _packageName, value);
         }
 
-        public DelegateCommand OkCommand { get; private set; }
-        public DelegateCommand CancelCommand { get; private set; }
-
-        private ObservableCollection<PackageInfoDependency> _dependencies;
-
-        public event Action<IDialogResult> RequestClose;
-
-        public ObservableCollection<PackageInfoDependency> Dependencies
+        private ObservableCollection<PackageGroupInfo> _dependencies;
+        public ObservableCollection<PackageGroupInfo> Dependencies
         {
             get => _dependencies;
             set => SetProperty(ref _dependencies, value);
         }
 
         public string Title => "Dependencies";
+        public event Action<IDialogResult> RequestClose;
+
+        public DelegateCommand OkCommand { get; private set; }
+        public DelegateCommand CancelCommand { get; private set; }
 
         public DependenciesDialogViewModel()
         {
-            Dependencies = new ObservableCollection<PackageInfoDependency>();
+            Dependencies = new ObservableCollection<PackageGroupInfo>();
             OkCommand = new DelegateCommand(()=>CloseDialog(true));
             CancelCommand = new DelegateCommand(() => CloseDialog(false));
         }
@@ -46,7 +44,7 @@ namespace NugetDownloader.ViewModels.Dialogs
         {
             if (parameters.ContainsKey("dependencies"))
             {
-                parameters.TryGetValue<List<PackageInfoDependency>>("dependencies", out var dependencies);
+                parameters.TryGetValue<List<PackageGroupInfo>>("dependencies", out var dependencies);
 
                 if (dependencies != null)
                     LoadDependencies(dependencies);
@@ -65,7 +63,7 @@ namespace NugetDownloader.ViewModels.Dialogs
             RequestClose?.Invoke(new DialogResult(buttonResult));
         }
 
-        private void LoadDependencies(List<PackageInfoDependency> dependencies)
+        private void LoadDependencies(List<PackageGroupInfo> dependencies)
         {
             Dependencies.Clear();
 

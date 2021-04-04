@@ -10,6 +10,7 @@ using Prism.Events;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace NugetDownloader.Services
             IEnumerable<IPackageSearchMetadata> results = await resource.SearchAsync(
                 name, filter, skip: 0, take: 20, logger, cancellationToken);
 
-            foreach(IPackageSearchMetadata result in results)
+            foreach (IPackageSearchMetadata result in results)
             {
                 packages.Add(new PackageInfo(result.Identity.Id, result.Identity.Version.ToString(), result.Description, null));
             }
@@ -49,12 +50,12 @@ namespace NugetDownloader.Services
             return packages;
         }
 
-        public async Task<List<PackageInfoDependency>> Download(PackageInfo package)
+        public async Task<List<PackageGroupInfo>> Download(PackageInfo package)
         {
             //SearchDependencies(package);
 
             //return;
-            var packageDependencies = new List<PackageInfoDependency>();
+            var packageDependencies = new List<PackageGroupInfo>();
 
             var logger = NullLogger.Instance;
             var cancellationToken = CancellationToken.None;
@@ -65,7 +66,7 @@ namespace NugetDownloader.Services
 
             var version = new NuGetVersion(package.Version);
 
-            using(MemoryStream packageStream = new MemoryStream())
+            using (MemoryStream packageStream = new MemoryStream())
             {
                 await resource.CopyNupkgToStreamAsync(
                     package.Name,
@@ -83,12 +84,23 @@ namespace NugetDownloader.Services
                     // Get dependencies
                     var dependencies = await packageReader.GetPackageDependenciesAsync(cancellationToken);
 
-                    foreach(var d in dependencies)
+                    foreach (var d in dependencies)
                     {
-                        foreach(var dp in d.Packages)
+                        if (!d.Packages.Any())
+                            continue;
+
+                        var groupInfo = new PackageGroupInfo()
                         {
-                            packageDependencies.Add(new PackageInfoDependency(dp.Id, dp.VersionRange.MinVersion.Version.ToString(), dp.VersionRange.MaxVersion?.Version.ToString()));
+                            TargetFrameworkName = d.TargetFramework.Framework,
+                            Version = d.TargetFramework.Version.ToString()
+                        };
+
+                        foreach (var dp in d.Packages)
+                        {
+                            groupInfo.Packages.Add(new PackageInfoDependency(dp.Id, dp.VersionRange.MinVersion.Version.ToString(), dp.VersionRange.MaxVersion?.Version.ToString()));
                         }
+
+                        packageDependencies.Add(groupInfo);
                     }
 
                     _eventAggregator.GetEvent<PackageDownloadedEvent>().Publish(nuspecReader.GetTags());
@@ -143,6 +155,6 @@ namespace NugetDownloader.Services
                 return dependencies;
             }
         }
-        
+
     }
 }

@@ -32,8 +32,8 @@ namespace NugetDownloader.ViewModels
             set => SetProperty(ref _seachTerm, value);
         }
 
-        private string _outputText;
-        public string OutputText
+        private ObservableCollection<string> _outputText;
+        public ObservableCollection<string> OutputText
         {
             get => _outputText;
             set => SetProperty(ref _outputText, value);
@@ -63,6 +63,7 @@ namespace NugetDownloader.ViewModels
             _eventAggregator = eventAggregator;
             _dialogService = dialogService;
             Packages = new ObservableCollection<PackageInfo>();
+            OutputText = new ObservableCollection<string>();
 
             SearchCommand = new DelegateCommand(() => SearchPackage());
             DownloadCommand = new DelegateCommand(() => DownloadPackage());
@@ -119,10 +120,10 @@ namespace NugetDownloader.ViewModels
 
         private void AddToOutput(string message)
         {
-            OutputText = string.Concat(OutputText, message, Environment.NewLine);
+            OutputText.Add(message);
         }
 
-        private void ShowDependencies(List<PackageInfoDependency> dependencies)
+        private void ShowDependencies(List<PackageGroupInfo> dependencies)
         {
             var p = new DialogParameters()
             {

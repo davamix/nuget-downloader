@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NugetDownloader.Events
 {
-    public class PackageDependenciesEvent : PubSubEvent<List<PackageInfoDependency>>
+    public class PackageDependenciesEvent : PubSubEvent<List<PackageGroupInfo>>
     {
     }
 }

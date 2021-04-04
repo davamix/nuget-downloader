@@ -82,16 +82,15 @@
 				  Header="Output"
 				  Foreground="{DynamicResource MaterialDesignDarkForeground}"
 				  Background="{DynamicResource MaterialDesignFlatButtonClick}">
-			<StackPanel Orientation="Vertical"
-						TextBlock.Foreground="{DynamicResource MaterialDesignDarkForeground}"
-						Margin="24,8,24,16">
-				<TextBox Text="{Binding OutputText}"
-						 AcceptsReturn="True"
-						 TextWrapping="Wrap"
-						 IsReadOnly="True"
-						 Background="{DynamicResource MaterialDesignFlatButtonClick}"/>
-				<TextBlock Style="{StaticResource HorizontalExpanderContentTextBlock}" />
-			</StackPanel>
+			<ListBox ItemsSource="{Binding OutputText}"
+					 Background="{DynamicResource MaterialDesignFlatButtonClick}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Style="{StaticResource HorizontalExpanderContentTextBlock}"
+								   Text="{Binding}" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
 		</Expander>
 
 	</Grid>
